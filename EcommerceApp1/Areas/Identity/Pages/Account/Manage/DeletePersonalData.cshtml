@@ -1,0 +1,59 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<div class="space-y-6">
+
+    <div>
+        <h3 class="text-xl font-semibold">@ViewData["Title"]</h3>
+        <p class="text-sm text-base-content/60">This action is permanent and cannot be undone</p>
+    </div>
+
+    <div class="alert alert-error text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        </svg>
+        <span>Deleting this data will permanently remove your account and cannot be recovered.</span>
+    </div>
+
+    <div class="card bg-base-100 shadow-md border border-base-200">
+        <div class="card-body gap-4">
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-error text-sm" role="alert"></div>
+
+            <form id="delete-user" method="post" class="flex flex-col gap-4">
+
+                @if (Model.RequirePassword)
+                {
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Confirm your password</legend>
+                        <input asp-for="Input.Password"
+                               type="password"
+                               class="input input-bordered w-full"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="Please enter your password." />
+                        <span asp-validation-for="Input.Password" class="fieldset-label text-error text-xs"></span>
+                    </fieldset>
+                }
+
+                <button class="btn btn-error w-full mt-2" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete data and close my account
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,42 @@
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Contact Us Page";
+}
+
+<main>
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md space-y-6">
+
+            <div class="text-center">
+                <h1 class="text-3xl font-bold tracking-tight">Contact Us</h1>
+                <p class="mt-2 text-sm text-base-content/60">
+                    Got a technical issue? Want to send feedback about a beta feature?<br />
+                    Need details about our Business plan? Let us know.
+                </p>
+            </div>
+
+            <div class="card bg-base-100 shadow-md border border-base-200">
+                <div class="card-body gap-4">
+                    <form action="#" method="post" class="flex flex-col gap-4">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Your email</legend>
+                            <input type="email" id="email" name="email" class="input input-bordered w-full" placeholder="name@example.com" required />
+                        </fieldset>
+
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Subject</legend>
+                            <input type="text" id="subject" name="subject" class="input input-bordered w-full" placeholder="Let us know how we can help you" required />
+                        </fieldset>
+
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Your message</legend>
+                            <textarea id="message" name="message" rows="6" class="textarea textarea-bordered w-full" placeholder="Leave a comment..."></textarea>
+                        </fieldset>
+
+                        <button type="submit" class="btn btn-neutral w-full mt-2">Send message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

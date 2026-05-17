@@ -1,0 +1,100 @@
+﻿@page
+@model EnableAuthenticatorModel
+@{
+    ViewData["Title"] = "Configure authenticator app";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="space-y-6">
+
+    <div>
+        <h3 class="text-xl font-semibold">@ViewData["Title"]</h3>
+        <p class="text-sm text-base-content/60">Follow the steps below to link your authenticator app</p>
+    </div>
+
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="card bg-base-100 shadow-md border border-base-200">
+        <div class="card-body gap-6">
+            
+            <div class="flex gap-4">
+                <div class="badge badge-neutral badge-lg shrink-0 mt-0.5 h-7 w-7 rounded-full text-sm font-bold">1</div>
+                <div class="space-y-1">
+                    <p class="font-medium">Download an authenticator app</p>
+                    <p class="text-sm text-base-content/60">
+                        Use Microsoft Authenticator for
+                        <a href="https://go.microsoft.com/fwlink/?Linkid=825072" class="link link-primary">Android</a> and
+                        <a href="https://go.microsoft.com/fwlink/?Linkid=825073" class="link link-primary">iOS</a>,
+                        or Google Authenticator for
+                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" class="link link-primary">Android</a> and
+                        <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" class="link link-primary">iOS</a>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="divider my-0"></div>
+            
+            <div class="flex gap-4">
+                <div class="badge badge-neutral badge-lg shrink-0 mt-0.5 h-7 w-7 rounded-full text-sm font-bold">2</div>
+                <div class="space-y-3 w-full">
+                    <p class="font-medium">Scan the QR code or enter the key</p>
+                    <p class="text-sm text-base-content/60">
+                        Scan the QR code below or enter this key into your authenticator app.
+                        Spaces and casing do not matter.
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <kbd class="kbd kbd-md tracking-widest font-mono">@Model.SharedKey</kbd>
+                    </div>
+                    <div class="alert alert-info text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>
+                            Learn how to
+                            <a href="https://go.microsoft.com/fwlink/?Linkid=852423" class="link">enable QR code generation</a>.
+                        </span>
+                    </div>
+                    <div id="qrCode" class="rounded-box overflow-hidden w-fit"></div>
+                    <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
+                </div>
+            </div>
+
+            <div class="divider my-0"></div>
+            
+            <div class="flex gap-4">
+                <div class="badge badge-neutral badge-lg shrink-0 mt-0.5 h-7 w-7 rounded-full text-sm font-bold">3</div>
+                <div class="space-y-4 w-full">
+                    <div>
+                        <p class="font-medium">Enter the verification code</p>
+                        <p class="text-sm text-base-content/60">
+                            Your authenticator app will display a unique code. Enter it below to complete setup.
+                        </p>
+                    </div>
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-error text-sm" role="alert"></div>
+
+                    <form id="send-code" method="post" class="flex flex-col gap-4 max-w-sm">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Verification code</legend>
+                            <input asp-for="Input.Code"
+                                   class="input input-bordered w-full tracking-widest font-mono"
+                                   autocomplete="off"
+                                   placeholder="000 000" />
+                            <span asp-validation-for="Input.Code" class="fieldset-label text-error text-xs"></span>
+                        </fieldset>
+
+                        <button type="submit" class="btn btn-neutral w-full">
+                            Verify
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

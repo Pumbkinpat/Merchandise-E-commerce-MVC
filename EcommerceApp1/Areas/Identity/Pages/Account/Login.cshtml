@@ -1,0 +1,106 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md space-y-6">
+        
+        <div class="text-center">
+            <h3 class="text-3xl font-bold tracking-tight">Sign in to your account</h3>
+        </div>
+        
+        <div class="card bg-base-100 shadow-md border border-base-200">
+            <div class="card-body gap-4">
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-error text-sm" role="alert"></div>
+
+                <form id="account" method="post" class="flex flex-col gap-4">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Email</legend>
+                        <input asp-for="Input.Email"
+                               type="email"
+                               class="input input-bordered w-full"
+                               autocomplete="username"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="fieldset-label text-error text-xs"></span>
+                    </fieldset>
+
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Password</legend>
+                        <input asp-for="Input.Password"
+                               type="password"
+                               class="input input-bordered w-full"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="••••••••" />
+                        <span asp-validation-for="Input.Password" class="fieldset-label text-error text-xs"></span>
+                    </fieldset>
+
+                    <div class="flex items-center justify-between">
+                        <label class="label gap-2 cursor-pointer">
+                            <input asp-for="Input.RememberMe" type="checkbox" class="checkbox checkbox-sm" />
+                            <span class="label-text text-sm">@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+                        </label>
+                        <a id="forgot-password"
+                           asp-page="./ForgotPassword"
+                           class="text-sm link link-primary">Forgot password?</a>
+                    </div>
+
+                    <button id="login-submit" type="submit" class="btn btn-neutral w-full mt-2">
+                        Log in
+                    </button>
+                </form>
+
+                <div class="divider text-xs text-base-content/40">or</div>
+
+                <div class="flex flex-col gap-2 text-sm text-center text-base-content/60">
+                    <p>
+                        Don't have an account?
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="link link-primary font-medium">
+                            Register
+                        </a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="link link-neutral">
+                            Resend email confirmation
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+        {
+            <div class="card bg-base-100 shadow-sm border border-base-200">
+                <div class="card-body gap-3">
+                    <p class="text-sm font-medium text-base-content/60 text-center">Continue with</p>
+                    <form id="external-account"
+                          asp-page="./ExternalLogin"
+                          asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post"
+                          class="flex flex-col gap-2">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit"
+                                    class="btn btn-outline w-full"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Log in using your @provider.DisplayName account">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </form>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

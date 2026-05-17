@@ -1,0 +1,126 @@
+@{
+	ViewData["Title"] = "Products Page";
+	ViewBag.Page = "Products";
+}
+
+<main>
+	<section class="bg-base-200 py-8 sm:py-16 lg:py-24">
+		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+			<!-- Product Header -->
+			<div class="mb-12 space-y-4 md:mb-16 lg:mb-24">
+				<div class="text-primary text-sm font-medium uppercase">Products</div>
+				<h2 class="text-base-content text-2xl font-semibold md:text-3xl lg:text-4xl">All New Collection</h2>
+			</div>
+			
+			
+			<!-- Pagination -->
+			<div class="flex justify-end mb-8">
+				<div class="join">
+					<script type="text/javascript">
+						function activeButton(e) {
+							e.target.classList.add('btn-active');
+						}
+					</script>
+					
+					@for (int i = 1; i <= @Model.TotalPages; i++)
+					{
+						<a
+							asp-controller="Products"
+							asp-action="Category"
+							asp-route-category="@Model.Category"
+							asp-route-minPrice="@Model.MinPrice"
+							asp-route-maxPrice="@Model.MaxPrice"
+							asp-route-page="@i"
+							onClick="activeButton(e)"
+							class="join-item btn">
+							@i
+						</a>
+					}
+				</div>
+			</div>
+			
+			<div class="flex relative">
+				<aside class="sticky top-24 mb-16 h-fit">
+					<h3 class="font-bold">Filters</h3>
+					<!-- Filter Form -->
+					<form method="get" asp-controller="Products" asp-action="Category" class="*:border-2 *:border-dashed ">
+						<p class="hidden">Current search string: @Model.SearchString</p>
+						<div class="mb-6 p-4 border">
+							<label for="category">Category</label>
+							<select id="category" name="category" class="w-full">
+								<!option value="">All Categories</!option>
+								<!option value="Clothing" @(Model.Category == "Clothing" ? "selected" : "")>Clothing</!option>
+								<!option value="Drinkware" @(Model.Category == "Drinkware" ? "selected" : "")>Drinkware</!option>
+								<!option value="Accessories" @(Model.Category == "Accessories" ? "selected" : "")>Accessories</!option>
+							</select>
+						</div>
+						<div class="mb-6 p-4 border">
+							<label for="minPrice">Min Price</label>
+							<input type="number" id="minPrice" name="minPrice" value="@Model.MinPrice" step="1" class="pl-2"/>
+						</div>
+						<div class="mb-6 p-4 border">
+							<label for="maxPrice">Max Price</label>
+							<input type="number" id="maxPrice" name="maxPrice" value="@Model.MaxPrice" step="1" class="pl-2"/>
+						</div>
+						<button class="btn btn-wide border-solid!" type="submit">Filter</button>
+					</form>
+				</aside>
+				
+				<div class="divider lg:divider-horizontal bg-black"></div>
+				
+				<!-- Product Cards -->
+				<div class="">
+					<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+						@foreach (var product in Model.Products)
+						{
+							<div class="card border-2 rounded-none bg-base-100 shadow-sm">
+								<figure>
+									<img
+										src="@product.ImageUrl"
+										alt="Shoes"
+										class="border-b-2 border-dashed"/>
+								</figure>
+								<div class="card-body">
+									<h2 class="card-title">
+										@product.Name
+										<div class="badge badge-secondary">NEW</div>
+									</h2>
+									<p>@product.Description</p>
+									<div class="card-actions justify-end">
+										<div class="badge badge-outline">Fashion</div>
+										<div class="badge badge-outline">Products</div>
+									</div>
+									<div class="divider divider-vertical"></div>
+									<div class="flex justify-between">
+										<strong class="text-xl">$@product.Price</strong>
+										<a asp-controller="ShoppingCart" asp-action="AddCartItem" asp-route-productId="@product.ProductId" class="btn btn-outline btn-neutral">Add to cart</a>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			
+			<!-- Pagination -->
+			<div class="flex justify-end">
+				<div class="join mt-8">
+					<script type="text/javascript">
+						function activeButton(e) {
+							e.target.classList.add('btn-active');
+						}
+					</script>
+					
+					@for (int i = 1; i <= @Model.TotalPages; i++)
+					{
+						<a asp-controller="Products" asp-action="Category" asp-route-page="@i" onClick="activeButton(e)" class="join-item btn">@i</a>
+					}
+				</div>
+			</div>
+			
+		</div>
+	</section>
+</main>
+
+
+

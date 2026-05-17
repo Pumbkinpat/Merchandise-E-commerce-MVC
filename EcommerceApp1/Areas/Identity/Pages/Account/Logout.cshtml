@@ -1,0 +1,51 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md space-y-6">
+
+        <div class="text-center">
+            <h1 class="text-3xl font-bold tracking-tight">@ViewData["Title"]</h1>
+        </div>
+
+        <div class="card bg-base-100 shadow-md border border-base-200">
+            <div class="card-body items-center text-center gap-4">
+
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <p class="text-sm text-base-content/60">Are you sure you want to log out?</p>
+                    <form class="w-full"
+                          asp-area="Identity"
+                          asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+                          method="post">
+                        <button type="submit" class="btn btn-error w-full">
+                            Log out
+                        </button>
+                    </form>
+                    <a asp-page="/Index" class="btn btn-ghost btn-sm">
+                        Cancel
+                    </a>
+                }
+                else
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="space-y-1">
+                        <p class="font-medium">You have been logged out</p>
+                        <p class="text-sm text-base-content/60">Thanks for visiting. See you next time!</p>
+                    </div>
+                    <a asp-page="/Index" class="btn btn-neutral w-full mt-2">
+                        Return to home
+                    </a>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</div>

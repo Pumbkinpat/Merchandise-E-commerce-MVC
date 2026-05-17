@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="space-y-6">
+
+    <div>
+        <h3 class="text-xl font-semibold">@ViewData["Title"]</h3>
+        <p class="text-sm text-base-content/60">Update your personal profile information</p>
+    </div>
+
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="card bg-base-100 shadow-md border border-base-200">
+        <div class="card-body gap-4">
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-error text-sm" role="alert"></div>
+
+            <form id="profile-form" method="post" class="flex flex-col gap-4">
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Username</legend>
+                    <input asp-for="Username"
+                           class="input input-bordered w-full"
+                           placeholder="Please choose your username."
+                           disabled />
+                    <p class="fieldset-label text-xs text-base-content/40">Your username cannot be changed</p>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Phone number</legend>
+                    <input asp-for="Input.PhoneNumber"
+                           class="input input-bordered w-full"
+                           placeholder="Please enter your phone number." />
+                    <span asp-validation-for="Input.PhoneNumber" class="fieldset-label text-error text-xs"></span>
+                </fieldset>
+
+                <button id="update-profile-button" type="submit" class="btn btn-neutral w-full mt-2">
+                    Save changes
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

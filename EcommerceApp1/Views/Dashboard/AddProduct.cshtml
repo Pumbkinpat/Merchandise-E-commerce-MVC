@@ -1,0 +1,44 @@
+@model EcommerceApp1.Models.Product
+@{
+    Layout = null;
+}
+
+@using (@Html.BeginForm(FormMethod.Post, new { controller = "Dashboard", action = "SaveProduct" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.EditorForModel()
+
+    <button type="submit">Add</button>
+}
+
+
+@*<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body class="grid align-items-center">
+<form asp-controller="Dashboard" asp-action="SaveProduct">
+    <ul class="flex">
+        <li class="join">
+            <label>Name<input type="text" name="Name"/></label>
+            <label>Price<input type="number" name="Price"/></label>
+        </li>
+        <li class="join">
+            <label for="category">Category</label>
+            <select id="category" name="Category" class="w-full">
+                <!option value="1">1</!option>
+                <!option value="2">2</!option>
+                <!option value="3">3</!option>
+            </select>
+            <label>Stock Quanity<input type="number" name="StockQuantity"/></label>
+        </li>
+        <label>Image URL<input type="file" name="ImageUrl"/></label>
+        <li>Description<textarea name="Description"></textarea></li>
+        
+        <button type="submit">Add</button>
+    </ul> 
+</form>
+</body>
+</html>*@

@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul
+    tabindex="-1"
+    class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-60 p-2 shadow">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Manage/Index"
+               title="Manage" class="inline-block first-letter:uppercase">@User.Identity?.Name
+                @if (User.IsInRole("Admin"))
+                {
+                    <span class="badge badge-soft badge-secondary">Admin</span>
+                }
+            </a>
+        </li>
+        <li><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li> 
+        <li><a href="#">Settings</a></li>
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Logout" accept-charset
+               asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+               class="btn text-dark">
+                Logout
+            </a>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

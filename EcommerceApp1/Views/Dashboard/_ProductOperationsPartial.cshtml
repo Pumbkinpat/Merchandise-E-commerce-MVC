@@ -1,0 +1,69 @@
+@{
+    ViewBag.Title = "ProductOperations";
+    Layout = null;
+    IHttpClientFactory httpClientFactory;
+}
+
+<div class="overflow-x-auto">
+	<table class="table table-xs table-zebra">
+		<thead>
+		<tr>
+			<th>
+				<label>
+					<input type="checkbox" class="checkbox" />
+				</label>
+			</th>
+			<th></th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Price</th>
+			<th>Stock Quantity</th>
+			<th>Date Created</th>
+			<th>Image URL</th>
+			<th>Category</th>
+		</tr>
+		</thead>
+		<tbody>
+		@{ List<Product> products = Model; }
+		@foreach (var product in products)
+		{
+			<tr id="@product">
+				<th>
+					<label>
+						<input type="checkbox" class="checkbox"/>
+					</label>
+				</th>
+				<td>@product.ProductId</td>
+				<td>@product.Name</td>
+				<td>@product.Description</td>
+				<td>@product.Price</td>
+				<td>@product.StockQuantity</td>
+				<td>@product.DateCreated</td>
+				<td>
+					<div class="avatar">
+						<div class="mask mask-squircle h-12 w-12">
+							<img
+								src="@product.ImageUrl"
+								alt="Product Image"/>
+						</div>
+					</div>
+				</td>
+				<th>@product.CategoryId</th>
+
+				<script>
+			        function TriggerDelete(productId) {
+				        const xhttp = new XMLHttpRequest();
+				        xhttp.open("DELETE", `/Dashboard/DeleteProduct?productId=${productId}`);
+				        xhttp.onload = function() { location.reload(); }
+				        xhttp.send();
+			        }
+		        </script>
+		        
+				<th>
+					<button onClick={TriggerDelete(@product.ProductId)} class="btn btn-ghost btn-xs">&#128465</button>
+				</th>
+			</tr>
+		}
+		</tbody>
+	</table> 
+</div>

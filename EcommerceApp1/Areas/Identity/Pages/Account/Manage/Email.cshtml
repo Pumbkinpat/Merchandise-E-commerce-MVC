@@ -1,0 +1,86 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<div class="space-y-6">
+
+    <div>
+        <h3 class="text-xl font-semibold">@ViewData["Title"]</h3>
+        <p class="text-sm text-base-content/60">Update the email address associated with your account</p>
+    </div>
+
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="card bg-base-100 shadow-md border border-base-200">
+        <div class="card-body gap-4">
+
+            <div asp-validation-summary="All" class="text-sm" role="alert"></div>
+
+            <form id="email-form" method="post" class="flex flex-col gap-4">
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Current email</legend>
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <div class="flex items-center gap-2">
+                            <input asp-for="Email"
+                                   class="input input-bordered w-full"
+                                   placeholder="Please enter your email."
+                                   disabled />
+                            <span class="badge badge-success gap-1 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                Verified
+                            </span>
+                        </div>
+                        <p class="fieldset-label text-xs text-base-content/40">Your email address has been verified</p>
+                    }
+                    else
+                    {
+                        <input asp-for="Email"
+                               class="input input-bordered w-full"
+                               placeholder="Please enter your email."
+                               disabled />
+                        <div class="flex items-center justify-between mt-1">
+                            <p class="fieldset-label text-xs text-warning">Your email is not verified</p>
+                            <button id="email-verification"
+                                    type="submit"
+                                    asp-page-handler="SendVerificationEmail"
+                                    class="btn btn-xs btn-outline btn-warning">
+                                Send verification email
+                            </button>
+                        </div>
+                    }
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">New email</legend>
+                    <input asp-for="Input.NewEmail"
+                           class="input input-bordered w-full"
+                           autocomplete="email"
+                           aria-required="true"
+                           placeholder="Please enter new email." />
+                    <span asp-validation-for="Input.NewEmail" class="fieldset-label text-error text-xs"></span>
+                </fieldset>
+
+                <button id="change-email-button"
+                        type="submit"
+                        asp-page-handler="ChangeEmail"
+                        class="btn btn-neutral w-full mt-2">
+                    Change email
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

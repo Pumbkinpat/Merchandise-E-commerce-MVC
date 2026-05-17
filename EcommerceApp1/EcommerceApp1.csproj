@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-EcommerceApp1-0da2df67-5996-42bd-9cf9-9380f1d9d497</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0-preview4.26064.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+      <Folder Include="wwwroot\icon\" />
+      <Folder Include="wwwroot\images\accessories\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\1.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\10.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\11.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\12.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\13.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\2.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\3.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\4.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\5.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\6.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\7.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\8.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\t-shirt\9.png" />
+    </ItemGroup>
+
+</Project>

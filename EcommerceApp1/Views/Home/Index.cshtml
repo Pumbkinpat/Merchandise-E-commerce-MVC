@@ -1,0 +1,131 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="">
+	<main class="min-h-screen flex-col">
+		@*
+		<!-- ===== HERO CAROUSEL ===== -->
+		<div class="relative w-full overflow-hidden">
+			<div class="carousel w-full h-[480px] md:h-[600px]" id="heroCarousel">
+				<div id="item1" class="carousel-item relative w-full">
+					<img src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+						class="w-full h-full object-cover" alt="Slide 1" />
+					<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+				</div>
+				<div id="item2" class="carousel-item relative w-full">
+					<img src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+						class="w-full h-full object-cover" alt="Slide 2" />
+					<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+				</div>
+				<div id="item3" class="carousel-item relative w-full">
+					<img src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+						class="w-full h-full object-cover" alt="Slide 3" />
+					<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+				</div>
+				<div id="item4" class="carousel-item relative w-full">
+					<img src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+						class="w-full h-full object-cover" alt="Slide 4" />
+					<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+				</div>
+			</div>
+
+			<!-- Prev / Next buttons -->
+			<div class="absolute left-4 right-4 top-1/2 flex -translate-y-1/2 justify-between pointer-events-none z-10">
+				<button class="btn btn-circle bg-white/80 hover:bg-white border-0 shadow-lg pointer-events-auto carousel-button" id="btnPrev">❮</button>
+				<button class="btn btn-circle bg-white/80 hover:bg-white border-0 shadow-lg pointer-events-auto carousel-button" id="btnNext">❯</button>
+			</div>
+
+			<!-- Dot indicators -->
+			<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10" id="carouselDots">
+				<button class="w-2.5 h-2.5 rounded-full bg-white transition-all duration-300 dot active:scale-125" data-index="0"></button>
+				<button class="w-2.5 h-2.5 rounded-full bg-white/50 transition-all duration-300 dot" data-index="1"></button>
+				<button class="w-2.5 h-2.5 rounded-full bg-white/50 transition-all duration-300 dot" data-index="2"></button>
+				<button class="w-2.5 h-2.5 rounded-full bg-white/50 transition-all duration-300 dot" data-index="3"></button>
+			</div>
+		</div>
+
+		<!-- Hero Carousel Script -->
+		<script>
+			(function () {
+				const items = document.querySelectorAll('#heroCarousel .carousel-item');
+				const dots = document.querySelectorAll('.dot');
+				let pos = 0;
+
+				function goTo(index) {
+					items[pos].classList.remove('active');
+					dots[pos].classList.remove('bg-white');
+					dots[pos].classList.add('bg-white/50');
+
+					pos = (index + items.length) % items.length;
+
+					items[pos].classList.add('active');
+					dots[pos].classList.add('bg-white');
+					dots[pos].classList.remove('bg-white/50');
+
+					document.querySelectorAll('#heroCarousel .carousel-item').forEach((item, i) => {
+						item.style.transform = `translateX(${(i - pos) * 100}%)`;
+					});
+				}
+
+				// Init positions
+				items.forEach((item, i) => {
+					item.style.position = 'absolute';
+					item.style.top = '0'; item.style.left = '0'; item.style.width = '100%'; item.style.height = '100%';
+					item.style.transition = 'transform 0.5s cubic-bezier(.77,0,.18,1)';
+					item.style.transform = `translateX(${i * 100}%)`;
+				});
+
+				document.getElementById('btnPrev').addEventListener('click', () => goTo(pos - 1));
+				document.getElementById('btnNext').addEventListener('click', () => goTo(pos + 1));
+				dots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
+
+				// Auto-play
+				setInterval(() => goTo(pos + 1), 4000);
+			})();
+		</script>
+		<!-- Hero Carousel End -->
+		*@
+		
+		<div class="grid place-items-center mt-6">
+			<div class="card lg:card-side bg-base-100 rounded-none">
+				<figure>
+					<img
+						src="images/hero.jpeg"
+						alt="Album" 
+						class="max-h-120"/>
+				</figure>
+				<div class="card-body">
+					<h1 class="card-title text-3xl">Hello there!</h1>
+					<p class="max-w-80 text-left text-lg text-gray">
+						Welcome to Merchandise Store<br/>
+						Hi, I started this website to sell custom merch with custom cool design.
+						I used to dream about starting a small business when i grow up.<br/><br/>
+						Nowadays, i got inspired by young modern lifestyle energy
+						that i decided to build this platform as a starting point.<br/><br/>
+						Make sure to follow us to collect new thing whenever we drop.<br/><br/>*You have no choice*
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="mt-6 mx-96">
+			<h2 class="text-xl text-center font-bold mb-4">Common questions</h2>
+			<div class="collapse collapse-plus bg-base-100 border border-base-300">
+				<input type="radio" name="my-accordion-3" checked="checked"/>
+				<div class="collapse-title font-semibold">How long will it take for shipping?</div>
+				<div class="collapse-content text-sm">Depend on which shipping method. But order often arrive in 3 days</div>
+			</div>
+			<div class="collapse collapse-plus bg-base-100 border border-base-300">
+				<input type="radio" name="my-accordion-3"/>
+				<div class="collapse-title font-semibold">I forgot my password. What should I do?</div>
+				<div class="collapse-content text-sm">Click on "Forgot Password" on the login page and follow the instructions sent to your email.</div>
+			</div>
+			<div class="collapse collapse-plus bg-base-100 border border-base-300">
+				<input type="radio" name="my-accordion-3"/>
+				<div class="collapse-title font-semibold">Are you single?</div>
+				<div class="collapse-content text-sm">No, but we could go hang out and grab some matcha</div>
+			</div>
+		</div>
+	</main>
+</div>
