@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Wireless Headphones</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .add-to-cart {
+            position: relative;
+            overflow: hidden;
+        }
+        .add-to-cart::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .add-to-cart:active::after { opacity: 0.15; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.5s ease both; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200 flex items-center justify-center p-6">
+
+<div class="max-w-5xl w-full mx-auto">
+    <div class="card bg-base-100 shadow-xl lg:card-side overflow-hidden rounded-3xl">
+
+        <figure class="lg:w-1/2 bg-base-200 relative flex flex-col items-center justify-center p-8 gap-4">
+
+            <div class="absolute top-4 left-4">
+                <span class="badge badge-primary badge-lg font-medium tracking-wide">New Collection</span>
+            </div>
+
+            <div id="main-image-wrap" class="w-full aspect-square rounded-2xl overflow-hidden bg-base-300 flex items-center justify-center">
+                <img id="main-image"
+                     src="https://placehold.co/600x600/e8e0f7/6b21a8?text=Headphones"
+                     alt="Premium Wireless Headphones"
+                     class="w-full h-full object-cover transition-all duration-300" />
+            </div>
+
+        </figure>
+
+        <div class="card-body lg:w-1/2 p-8 lg:p-10 justify-center gap-5">
+
+            <div class="fade-up delay-1">
+                <h1 class="text-4xl font-bold leading-tight text-base-content">
+                    Premium Wireless<br/>Headphones
+                </h1>
+            </div>
+
+            <div class="fade-up delay-2 flex items-baseline gap-3">
+                <span class="text-3xl font-semibold text-black">$199.99</span>
+            </div>
+
+            <p class="fade-up delay-3 text-base-content/60 leading-relaxed text-sm">
+                Experience high-quality sound with our latest noise-canceling wireless headphones.
+                Designed for comfort and long battery life — perfect for work, travel, and everything in between.
+            </p>
+
+            <div class="fade-up delay-4 space-y-2">
+                <p class="text-sm font-medium text-base-content/60">Color</p>
+                <div class="flex gap-2">
+                    <button onclick="selectColor(this)" class="color-btn w-8 h-8 rounded-full bg-neutral ring-2 ring-offset-2 ring-neutral cursor-pointer border-0"></button>
+                    <button onclick="selectColor(this)" class="color-btn w-8 h-8 rounded-full bg-primary cursor-pointer border-0"></button>
+                    <button onclick="selectColor(this)" class="color-btn w-8 h-8 rounded-full bg-error cursor-pointer border-0"></button>
+                    <button onclick="selectColor(this)" class="color-btn w-8 h-8 rounded-full bg-success cursor-pointer border-0"></button>
+                </div>
+            </div>
+
+            <div class="fade-up delay-5 flex gap-3 pt-1">
+                <button class="add-to-cart btn btn-primary flex-1 rounded-2xl"
+                        onclick="handleAddToCart(this)">
+                    Add to cart
+                </button>
+                <button class="btn btn-outline rounded-2xl flex-1">
+                    Buy now
+                </button>
+                <button class="btn btn-ghost btn-square rounded-2xl" aria-label="Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="fade-up delay-5 flex flex-wrap gap-4 pt-1 border-t border-base-200">
+                <div class="flex items-center gap-1.5 text-xs text-base-content/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    30-day returns
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchImage(btn, url) {
+        document.getElementById('main-image').src = url;
+        document.querySelectorAll('.gallery-thumb').forEach(t => {
+            t.classList.remove('active');
+            t.classList.add('opacity-50');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('opacity-50');
+    }
+
+    function selectColor(btn) {
+        document.querySelectorAll('.color-btn').forEach(b => {
+            b.style.ringColor = '';
+            b.classList.remove('ring-2', 'ring-offset-2');
+        });
+        btn.classList.add('ring-2', 'ring-offset-2');
+    }
+
+    function handleAddToCart(btn) {
+        const original = btn.innerHTML;
+        btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Added!`;
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-primary');
+        setTimeout(() => {
+            btn.innerHTML = original;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>

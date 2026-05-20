@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { width: 100%; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .header { background-color: #007bff; color: #ffffff; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .field { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #555; }
+        .footer { background-color: #f4f4f4; color: #888; padding: 10px; text-align: center; font-size: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>New Contact Request</h2>
+    </div>
+    <div class="content">
+        <p>You have received a new message from your website contact form.</p>
+        
+        <div class="field">
+            <span class="label">Email:</span> {{email}}
+        </div>
+        <div class="field">
+            <span class="label">Subject:</span> {{subject}}
+        </div>
+        <div class="field">
+            <span class="label">Message:</span><br>
+            <p style="background: #f9f9f9; padding: 10px; border-left: 4px solid #007bff;">{{message}}</p>
+        </div>
+    </div>
+    <div class="footer">
+        Sent from Your Website <a href="#">Merchandise Store</a>
+    </div>
+</div>
+</body>
+</html>

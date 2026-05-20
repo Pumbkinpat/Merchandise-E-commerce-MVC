@@ -33,7 +33,9 @@ public class ShoppingCartRepository : IShoppingCartRepository
     public ShoppingCart GetShoppingCart() /* Get or create a new shopping cart */
     {
         var userId = GetUserId();
-        var shoppingCart = _context.ShoppingCarts.FirstOrDefault();
+        var shoppingCart = _context.ShoppingCarts
+            .Include(sc => sc.CartItems)
+            .FirstOrDefault(u => u.UserId == userId);
 
         if (shoppingCart == null)
         {
@@ -90,14 +92,16 @@ public class ShoppingCartRepository : IShoppingCartRepository
         }
     }
 
-    public void UpdateCartItemQuantity(int productId,int action)
+    public void UpdateCartItemQuantity(int productId, int action)
     {
-        var product = _productsRepository.GetById(productId);
         var userId = GetUserId();
-        var shoppingCartList = _context.ShoppingCarts.Where(u => u.UserId == userId);
-        var shoppingCart = GetShoppingCart();
         
-        if (!shoppingCartList.Contains(shoppingCart)) throw new Exception("shopping cart not match");
+        var shoppingCart = _context.ShoppingCarts
+            .FirstOrDefault(u => u.UserId == userId);
+
+        if (shoppingCart == null) throw new Exception("Shopping cart not found");
+
+        var product = _productsRepository.GetById(productId);
 
         var cartItem = _context.CartItems.FirstOrDefault(c =>
             c.ShoppingCartId == shoppingCart.ShoppingCartId && c.ProductId == product.ProductId);
@@ -105,10 +109,12 @@ public class ShoppingCartRepository : IShoppingCartRepository
         if (cartItem == null)
         {
             throw new Exception("No item in cart");
-        } else if (cartItem.Quantity + action >= 1)
+        }
+        else if (cartItem.Quantity + action >= 1)
         {
             cartItem.Quantity += action;
-        } else
+        }
+        else
         {
             _context.CartItems.Remove(cartItem);
         }

@@ -45,8 +45,8 @@
 				    <details class="">
 					    <summary>Pages</summary>
 					    <ul class="bg-base-100 rounded-t-none p-2">
-						    <li class="nowrap"><a href="#">Shopping Cart</a></li>
-						    <li><a href="#">Checkout</a></li>
+						    <li class="nowrap"><a asp-controller="ShoppingCart" asp-action="Cart">Shopping Cart</a></li>
+						    <li><a asp-controller="ShoppingCart" asp-action="Checkout">Checkout</a></li>
 					    </ul>
 				    </details>
 			    </li>
@@ -75,57 +75,79 @@
 		    <div class="dropdown dropdown-end">
 			    <script>
 				    async function LoadShoppingCart() {
-
 					    const response = await fetch('/ShoppingCart/GetCart');
+					    const cart = await response.json();
 
-					    const cartItems = await response.json();
+					    document.getElementById("cart-badge").textContent = cart.totalItems;
 
 					    const cartContainer = document.getElementById("shopping-cart-items");
-
 					    cartContainer.innerHTML = "";
 
-					    if (cartItems.length === 0) {
+					    if (cart.items.length === 0) {
 						    cartContainer.innerHTML = "<li>Cart is empty</li>";
+						    document.getElementById("cart-total-price").textContent = "$0.00";
 						    return;
 					    }
 
-					    cartItems.forEach(item => {
-
+					    cart.items.forEach(item => {
 						    cartContainer.innerHTML += `
-				                <li class="list-row justify-items-end">
-				                    <div class="text-xs font-semibold uppercase">
-				                        ${item.cartItemName}
-				                    </div>
-				
-				                    <div class="join self-end">
-				                        <button onclick="" class="join-item btn btn-square btn-ghost">-</button>
-				
-				                        <span class="join-item text-center self-center mx-2">
-				                            ${item.cartItemQuantity}
-				                        </span>
-				
-				                        <button onclick="" class="join-item btn btn-square btn-ghost">+</button>
-				                    </div>
-				                </li>
-            				`;
+					            <li class="list-row justify-items-end">
+					                <div class="text-xs font-semibold uppercase">
+					                    ${item.cartItemName}
+					                </div>
+					                <div class="join self-end">
+					                    <button 
+					                        onclick="updateQuantity(event, ${item.cartItemId}, -1)" 
+					                        class="join-item btn btn-square btn-ghost">-</button>
+					                    <span class="join-item text-center self-center mx-2">
+					                        ${item.cartItemQuantity}
+					                    </span>
+					                    <button 
+					                        onclick="updateQuantity(event, ${item.cartItemId}, 1)" 
+					                        class="join-item btn btn-square btn-ghost">+</button>
+					                </div>
+					            </li>
+					        `;
 					    });
+
+					    document.getElementById("cart-total-price").textContent =
+						    `$${cart.totalPrice.toFixed(2)}`;
+				    }
+
+				    async function updateQuantity(event, productId, action) {
+					    event.stopPropagation();  // prevent dropdown from closing
+					    event.preventDefault();
+
+					    await fetch(`/ShoppingCart/UpdateCartItemQuantity?productId=${productId}&action=${action}`);
+					    await LoadShoppingCart();
+
+					    // Keep dropdown open after re-render
+					    document.getElementById("cart-dropdown").focus();
 				    }
 			    </script>
-			    <div onclick="LoadShoppingCart()" tabindex="0" role="button" class="btn btn-ghost btn-circle">
+			    <div onload="LoadShoppingCart()" onclick="LoadShoppingCart()" tabindex="0" role="button" class="btn btn-ghost btn-circle">
 				    <div class="indicator">
 					    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/> </svg>
-					    <span class="badge badge-sm indicator-item">8</span>
+					    <span class="badge badge-sm indicator-item" id="cart-badge">0</span>
 				    </div>
 			    </div>
 			    <div
+				    id="cart-dropdown"
 				    tabindex="0"
 				    class="card card-compact dropdown-content bg-base-100 z-1 mt-6 w-100 shadow border-1">
-				    <div class="card-body">
+				    <li class="card-body">
 					    <ul id="shopping-cart-items" class="list p-0 bg-base-100 rounded-box">
-							<!-- Cart Items -->
+						    <!-- Cart Items -->
 					    </ul>
+					    <ul class="list p-0 bg-base-100 rounded-box">
+						    <li class="list-row justify-items-end">
+							    <span class="text-xs font-semibold uppercase">Total Price:</span>
+							    <span class="self-end" id="cart-total-price">$0.00</span>
+						    </li>
+					    </ul>
+					    
 					    <div class="card-actions">
-						    <button class="btn btn-ghost btn-block">View cart</button>
+						    <a href="/ShoppingCart/Cart" class="btn btn-ghost btn-block">View cart</a>
 					    </div>
 				    </div>
 			    </div>
@@ -141,7 +163,6 @@
 			    @await Html.PartialAsync("_LoginPartial")
 		    </div>
 	    </div>
-    </div>
     <!-- Navbar End -->
 </header>
 
@@ -273,9 +294,9 @@
 				d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path>
 		</svg>
 		<p>
-			ACME Industries Ltd.
+			Merchandise Store
 			<br />
-			Providing reliable tech since 1992
+			Providing cool tech merch since 2026
 		</p>
 	</aside>
 	<nav>
@@ -287,8 +308,8 @@
 	</nav>
 	<nav>
 		<h6 class="footer-title">Company</h6>
-		<a class="link link-hover">About us</a>
-		<a class="link link-hover">Contact</a>
+		<a href="/Home" class="link link-hover">About us</a>
+		<a href="/Home/Contact" class="link link-hover">Contact</a>
 		<a class="link link-hover">Jobs</a>
 	</nav>
 	<nav>
@@ -297,16 +318,17 @@
 		<a class="link link-hover">Privacy policy</a>
 		<a class="link link-hover">Cookie policy</a>
 	</nav>
-	<form>
+	<form method="post" asp-controller="Home" asp-action="SendSubConfirmEmail">
 		<h6 class="footer-title">Newsletter</h6>
 		<fieldset class="w-80">
 			<label>Enter your email address</label>
 			<div class="join">
 				<input
+					name="email"
 					type="text"
 					placeholder="username@site.com"
 					class="input input-bordered join-item"/>
-				<button class="btn btn-neutral join-item">Subscribe</button>
+				<button type="submit" class="btn btn-neutral join-item">Subscribe</button>
 			</div>
 		</fieldset>
 	</form>

@@ -1,0 +1,183 @@
+@{
+    ViewData["Title"] = "Your Cart";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-base-200 py-10 px-4">
+    <div class="max-w-5xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold tracking-tight">Shopping Cart</h1>
+            <p class="text-base-content/60 mt-1">Review your items before checkout</p>
+        </div>
+
+        <!-- Loading state -->
+        <div id="cart-loading" class="flex justify-center py-20">
+            <span class="loading loading-spinner loading-lg"></span>
+        </div>
+
+        <!-- Empty state -->
+        <div id="cart-empty" class="hidden flex flex-col items-center py-20 gap-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-base-content/30" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            <p class="text-xl font-semibold text-base-content/50">Your cart is empty</p>
+            <a href="/Products/Index" class="btn btn-primary">Continue Shopping</a>
+        </div>
+
+        <!-- Cart content -->
+        <div id="cart-content" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Items list -->
+            <div class="lg:col-span-2 flex flex-col gap-3" id="cart-items-list"></div>
+
+            <!-- Order summary -->
+            <div class="card bg-base-100 shadow-sm h-fit sticky top-6">
+                <div class="card-body gap-4">
+                    <h2 class="card-title text-lg">Order Summary</h2>
+
+                    <div class="divider my-0"></div>
+
+                    <div class="flex flex-col gap-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-base-content/60">Subtotal
+                                (<span id="summary-item-count">0</span> items)
+                            </span>
+                            <span id="summary-subtotal">$0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-base-content/60">Shipping</span>
+                            <span class="text-success font-medium">Free</span>
+                        </div>
+                    </div>
+
+                    <div class="divider my-0"></div>
+
+                    <div class="flex justify-between font-bold text-base">
+                        <span>Total</span>
+                        <span id="summary-total">$0.00</span>
+                    </div>
+
+                    <a href="/ShoppingCart/Checkout"
+                       class="btn btn-primary btn-block mt-2">
+                        Proceed to Checkout
+                    </a>
+
+                    <a href="/Products/Index"
+                       class="btn btn-ghost btn-block btn-sm">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // ── Render helpers ────────────────────────────────────────────────────────
+
+    function buildItemCard(item) {
+        return `
+        <div class="card bg-base-100 shadow-sm" id="cart-item-${item.cartItemId}">
+            <div class="card-body flex-row items-center gap-4 py-4">
+
+                <!-- Placeholder thumbnail -->
+                <div class="w-16 h-16 rounded-lg bg-base-200 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-base-content/30"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
+                    </svg>
+                </div>
+
+                <!-- Name + price -->
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold truncate">${item.cartItemName}</p>
+                    <p class="text-sm text-base-content/60 mt-0.5">
+                        $${item.unitPrice.toFixed(2)} each
+                    </p>
+                </div>
+
+                <!-- Quantity controls -->
+                <div class="join">
+                    <button onclick="updateQty(event, ${item.cartItemId}, -1)"
+                            class="join-item btn btn-sm btn-square btn-ghost">−</button>
+                    <span id="qty-${item.cartItemId}"
+                          class="join-item btn btn-sm btn-square pointer-events-none font-mono">
+                        ${item.cartItemQuantity}
+                    </span>
+                    <button onclick="updateQty(event, ${item.cartItemId}, 1)"
+                            class="join-item btn btn-sm btn-square btn-ghost">+</button>
+                </div>
+
+                <!-- Line subtotal -->
+                <div class="text-right min-w-[70px]">
+                    <p class="font-semibold" id="subtotal-${item.cartItemId}">
+                        $${item.subTotal.toFixed(2)}
+                    </p>
+                </div>
+
+                <!-- Remove -->
+                <button onclick="removeItem(${item.cartItemId})"
+                        class="btn btn-ghost btn-sm btn-square text-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+            </div>
+        </div>`;
+    }
+
+    // ── Data fetching ─────────────────────────────────────────────────────────
+
+    async function loadCart() {
+        const res  = await fetch('/ShoppingCart/GetCart');
+        const cart = await res.json();
+
+        document.getElementById('cart-loading').classList.add('hidden');
+
+        if (cart.items.length === 0) {
+            document.getElementById('cart-empty').classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('cart-content').classList.remove('hidden');
+        renderItems(cart);
+    }
+
+    function renderItems(cart) {
+        const list = document.getElementById('cart-items-list');
+        list.innerHTML = cart.items.map(buildItemCard).join('');
+
+        document.getElementById('summary-item-count').textContent = cart.totalItems;
+        document.getElementById('summary-subtotal').textContent   = `$${cart.totalPrice.toFixed(2)}`;
+        document.getElementById('summary-total').textContent      = `$${cart.totalPrice.toFixed(2)}`;
+    }
+
+    // ── Interactions ──────────────────────────────────────────────────────────
+
+    async function updateQty(event, productId, action) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        await fetch(`/ShoppingCart/UpdateCartItemQuantity?productId=${productId}&action=${action}`);
+        await loadCart();
+    }
+
+    async function removeItem(productId) {
+        await fetch(`/ShoppingCart/DeleteCartItem?productId=${productId}`);
+        await loadCart();
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    loadCart();
+</script>
+}

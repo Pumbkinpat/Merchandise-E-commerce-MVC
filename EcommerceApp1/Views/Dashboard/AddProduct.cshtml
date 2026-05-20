@@ -1,44 +1,258 @@
 @model EcommerceApp1.Models.Product
 @{
     Layout = null;
+    ViewData["Title"] = "Add Product";
 }
 
-@using (@Html.BeginForm(FormMethod.Post, new { controller = "Dashboard", action = "SaveProduct" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.EditorForModel()
-
-    <button type="submit">Add</button>
-}
-
-
-@*<!DOCTYPE html>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>title</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Add Product — Merch Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@4"></script>
+    <style>
+        body { background: #0e0e10; color: #e4e4e7; min-height: 100vh; }
+        .mono { font-family: 'DM Mono', monospace; }
+
+        .field-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #71717a;
+            margin-bottom: 7px;
+            font-family: 'DM Mono', monospace;
+        }
+        .field-input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: #e4e4e7;
+            font-size: 0.9rem;
+            font-family: 'Syne', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .field-input:focus {
+            border-color: rgba(250,204,21,0.5);
+            background: rgba(250,204,21,0.03);
+        }
+        .field-input::placeholder { color: #3f3f46; }
+        textarea.field-input { resize: vertical; min-height: 90px; }
+
+        .form-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .preview-box {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: border-color 0.2s;
+            background: rgba(255,255,255,0.02);
+        }
+        .preview-box.has-image { border-style: solid; border-color: rgba(250,204,21,0.3); }
+
+        .submit-btn {
+            width: 100%;
+            background: #facc15;
+            color: #18181b;
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            letter-spacing: -0.01em;
+            transition: background 0.15s, transform 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .submit-btn:hover { background: #fde047; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #71717a;
+            font-size: 0.85rem;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .back-link:hover { color: #e4e4e7; background: rgba(255,255,255,0.05); }
+
+        .section-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #52525b;
+            margin-bottom: 14px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    </style>
 </head>
-<body class="grid align-items-center">
-<form asp-controller="Dashboard" asp-action="SaveProduct">
-    <ul class="flex">
-        <li class="join">
-            <label>Name<input type="text" name="Name"/></label>
-            <label>Price<input type="number" name="Price"/></label>
-        </li>
-        <li class="join">
-            <label for="category">Category</label>
-            <select id="category" name="Category" class="w-full">
-                <!option value="1">1</!option>
-                <!option value="2">2</!option>
-                <!option value="3">3</!option>
-            </select>
-            <label>Stock Quanity<input type="number" name="StockQuantity"/></label>
-        </li>
-        <label>Image URL<input type="file" name="ImageUrl"/></label>
-        <li>Description<textarea name="Description"></textarea></li>
-        
-        <button type="submit">Add</button>
-    </ul> 
-</form>
+<body data-theme="dark">
+
+<header style="height:60px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;background:#0e0e10;z-index:10;">
+    <a asp-controller="Dashboard" asp-action="Index" class="back-link">
+        ← Dashboard
+    </a>
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.1);"></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:28px;height:28px;background:#facc15;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;">🛍️</div>
+        <span style="font-weight:800;font-size:0.95rem;color:#fafafa;">MerchStore</span>
+        <span class="mono" style="font-size:0.65rem;color:#52525b;letter-spacing:0.05em;">/ ADD PRODUCT</span>
+    </div>
+</header>
+
+<div style="max-width:960px;margin:0 auto;padding:40px 24px 80px;">
+    
+    <div style="margin-bottom:36px;">
+        <div class="mono" style="font-size:0.72rem;color:#facc15;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">New Listing</div>
+        <h1 style="font-size:2rem;font-weight:800;letter-spacing:-0.04em;color:#fafafa;">Add a Product</h1>
+        <p style="color:#52525b;font-size:0.9rem;margin-top:6px;">Fill in the details below to add a new item to your inventory.</p>
+    </div>
+
+    @using (Html.BeginForm(FormMethod.Post, new { controller = "Dashboard", action = "SaveProduct" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+            
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                
+                <div class="form-card">
+                    <div class="section-label">Basic Info</div>
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+
+                        <div>
+                            <label class="field-label" for="name">Product Name</label>
+                            <input class="field-input" type="text" id="name" name="name" placeholder="e.g. Classic Logo Tee" required/>
+                        </div>
+
+                        <div>
+                            <label class="field-label" for="description">Description</label>
+                            <textarea class="field-input" id="description" name="description" placeholder="Describe the product…"></textarea>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div>
+                                <label class="field-label" for="price">Price ($)</label>
+                                <input class="field-input" type="number" id="price" name="price" placeholder="0.00" step="0.01" min="0" required/>
+                            </div>
+                            <div>
+                                <label class="field-label" for="stockQuantity">Stock Qty</label>
+                                <input class="field-input" type="number" id="stockQuantity" name="stockQuantity" placeholder="0" min="0" required/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="field-label" for="categoryId">Category ID</label>
+                            <input class="field-input" type="number" id="categoryId" name="categoryId" placeholder="e.g. 1" min="1" required/>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                
+                <div class="form-card">
+                    <div class="section-label">Product Image</div>
+
+                    <div id="previewBox" class="preview-box" style="margin-bottom:14px;">
+                        <div id="previewPlaceholder" style="text-align:center;">
+                            <div style="font-size:2rem;margin-bottom:8px;">🖼️</div>
+                            <div style="font-size:0.8rem;color:#52525b;">Preview will appear here</div>
+                        </div>
+                        <img id="previewImg" src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;display:none;border-radius:12px;"/>
+                    </div>
+
+                    <div>
+                        <label class="field-label" for="imageUrl">Image URL</label>
+                        <input class="field-input" type="url" id="imageUrl" name="imageUrl"
+                               placeholder="https://…" oninput="updatePreview(this.value)"/>
+                    </div>
+                </div>
+                
+                <div class="form-card" style="border-color:rgba(250,204,21,0.12);background:rgba(250,204,21,0.03);">
+                    <div class="section-label">Summary</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.8rem;color:#71717a;">Status</span>
+                            <span class="mono" style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);">● Active</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.8rem;color:#71717a;">Date Added</span>
+                            <span class="mono" style="font-size:0.78rem;color:#a1a1aa;">@DateTime.Now.ToString("MMM d, yyyy")</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:20px;">
+                        <button type="submit" class="submit-btn">
+                            <span>＋</span> Save Product
+                        </button>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <a asp-controller="Dashboard" asp-action="Index"
+                           style="display:block;text-align:center;font-size:0.8rem;color:#52525b;text-decoration:none;padding:8px;border-radius:8px;transition:color 0.15s;"
+                           onmouseover="this.style.color='#a1a1aa'" onmouseout="this.style.color='#52525b'">
+                            Cancel — back to inventory
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function updatePreview(url) {
+        const img = document.getElementById('previewImg');
+        const placeholder = document.getElementById('previewPlaceholder');
+        const box = document.getElementById('previewBox');
+        if (url && url.startsWith('http')) {
+            img.src = url;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+            box.classList.add('has-image');
+            img.onerror = function () {
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+                box.classList.remove('has-image');
+            };
+        } else {
+            img.style.display = 'none';
+            placeholder.style.display = 'block';
+            box.classList.remove('has-image');
+        }
+    }
+</script>
 </body>
-</html>*@
+</html>
