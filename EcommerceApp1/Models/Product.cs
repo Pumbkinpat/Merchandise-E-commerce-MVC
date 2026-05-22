@@ -15,15 +15,11 @@ public class Product
     [Required]
     [MaxLength(40)]
     public string Name { get; set; }
-
     public string Description { get; set; }
-
+    [Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
-
     public int StockQuantity { get; set; }
-
     public DateTime DateCreated { get; set; }
-
     public string ImageUrl { get; set; } = "https://picsum.photos/300/300";
 
     [ForeignKey("CategoryId")]
